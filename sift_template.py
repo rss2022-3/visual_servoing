@@ -66,15 +66,12 @@ def cd_sift_ransac(img, template):
     h, w = template.shape
     pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
     dst = cv2.perspectiveTransform(pts, M)
-    #print(dst)
-    #print("just printed dst")
+
     x_min = y_min = x_max = y_max = 0
     img2 = cv2.polylines(img,[np.int32(dst)],True,255,3, cv2.LINE_AA)
-    #print(img2)
     image_print(img2)
     # Return bounding box
-    #print(dst)
-    #print(dst[0][0][0], dst[1][0][1])
+
     x_min= min(dst[0][0][0], dst[1][0][0], dst[2][0][0], dst[3][0][0])
     y_min = min(dst[0][0][1], dst[1][0][1], dst[2][0][1], dst[3][0][1])
     x_max= max(dst[0][0][0], dst[1][0][0], dst[2][0][0], dst[3][0][0])
@@ -126,7 +123,6 @@ def cd_template_matching(img, template):
     # Use OpenCV template matching functions to find the best match
     # across template scales.
     res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCOEFF)
-    #res = cv2.matchTemplate(grey_img, resized_template, cv2.TM_CCOEFF)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
     if best_max_val is None or max_val > best_max_val:
       best_max_val = max_val
@@ -137,28 +133,14 @@ def cd_template_matching(img, template):
     # Remember to resize the bounding box using the highest scoring scale
     # x1,y1 pixel will be accurate, but x2,y2 needs to be correctly scaled
   min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(best_match)
-#  #print(max_loc)
   top_left = max_loc
   bottom_right = (top_left[0] + best_hw[1], top_left[1] + best_hw[0])
-#  #print(max_loc, bottom_right)
-  #loc = np.where(best_match >= .8)
-  #print("just before")
+
   cv2.rectangle(img, top_left, bottom_right,255,2),
-  #for pt in zip(*loc[::-1]):
-    #print("in here")
-    #print(pt[0] + best_hw[1], pt[1] + best_hw[0])
-    #cv2.rectangle(img, pt, (pt[0] + best_hw[1], pt[1] + best_hw[0]),(0,255,255),2)
-  #cv2.rectangle(img,min_loc,bottom_right,255,5)
+
   bounding_box = (top_left, bottom_right)
     #bounding_box = ((0,0),(0,0))
     ########### YOUR CODE ENDS HERE ########### 
-  #(startX, startY) = (int(best_max_loc[0]*r), int(best_max_loc[1]*r))
-  #(endX, endY) = (int((best_max_loc[0] + best_hw[1])*r),int((best_max_loc[1]+best_hw[0])*r))
-  #cv2.rectangle(img,(startX,startY),(endX,endY),(0,0,255),2)
-  #bounding_box = ((startX, startY),(endX, endY))
-  print(bounding_box)
-  image_print(img)
-  
-
+ 
   image_print(img)
   return bounding_box
