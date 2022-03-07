@@ -33,6 +33,7 @@ def cd_color_segmentation(img):
 				(x1, y1) is the top left of the bbox and (x2, y2) is the bottom right of the bbox
 	"""
 	########## YOUR CODE STARTS HERE ##########
+	#low_orange = np.array([70, 200, 200])
 	low_orange = np.array([70, 200, 200])
 	high_orange = np.array([130, 255, 255])
 	hsv_image = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
@@ -40,10 +41,10 @@ def cd_color_segmentation(img):
 	new_image = cv2.bitwise_and(img,img, mask=mask)
 	new_image_rgb = cv2.cvtColor(new_image, cv2.COLOR_HSV2RGB)
 	gray_image = cv2.cvtColor(new_image_rgb, cv2.COLOR_RGB2GRAY)
-	ret, thresh = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY)
+	ret, thresh = cv2.threshold(gray_image, 100, 255, cv2.THRESH_BINARY)
 	erode_img = cv2.erode(thresh, np.ones((5,5), 'uint8'), iterations=2)
-	dilate_img = cv2.dilate(erode_img,np.ones((5,5), 'uint8'), iterations=2 )
-	contours, hierarchy = cv2.findContours(image=dilate_img, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
+	dilate_img = cv2.dilate(erode_img,np.ones((5,5), 'uint8'), iterations=2)
+	_, contours, hierarchy = cv2.findContours(image=dilate_img, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 	img_copy = img.copy()
 	cv2.drawContours(image=img_copy, contours=contours, contourIdx=-1,color=(0,255,0),thickness=2,lineType=cv2.LINE_AA)
 	cnt = contours[0]
