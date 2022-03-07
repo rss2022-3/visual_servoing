@@ -122,7 +122,7 @@ def cd_template_matching(img, template):
     ########## YOUR CODE STARTS HERE ##########
     # Use OpenCV template matching functions to find the best match
     # across template scales.
-    res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCOEFF)
+    res = cv2.matchTemplate(img_canny, resized_template, cv2.TM_CCORR_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
     if best_max_val is None or max_val > best_max_val:
       best_max_val = max_val
