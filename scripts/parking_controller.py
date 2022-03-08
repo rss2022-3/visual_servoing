@@ -4,7 +4,6 @@ import numpy as np
 
 from visual_servoing.msg import ConeLocation, ParkingError
 from ackermann_msgs.msg import AckermannDriveStamped
-
 from utilities.controllers import PurePursuit
 from utilities.Trajectory import LinearTrajectory
 
@@ -34,7 +33,7 @@ class ParkingController():
         #adaptive velocity function
         Lfw, lfw = 0, 0
         v_desired = abs(v_desired)
-        if abs(v_desired) < 2:
+        if v_desired < 2:
             Lfw = v_desired
         elif v_desired >=2 and v_desired < 6:
             Lfw = 1.5*v_desired
@@ -79,21 +78,20 @@ class ParkingController():
         #################################
 
         #generate trajectory 
-        traj_knots = np.array([0,0],
+        traj_knots = np.array([[0,0],
                               [x_d, y_d],
-                              [x_d, y_d])
+                              [x_d, y_d]])
         t_breaks = np.array([0,2,2.1])
 
         trj_d = LinearTrajectory(t_breaks, traj_knots)
 
         steer, speed = self.pursuit.adaptiveControl(trj_d, self.v_function)
-
         drive_cmd = self.drive(steer, speed)
 
         #################################
 
         self.drive_pub.publish(drive_cmd)
-        #self.error_publisher()
+        self.error_publisher()
 
     def error_publisher(self):
         """
@@ -103,10 +101,15 @@ class ParkingController():
         error_msg = ParkingError()
 
         #################################
+        dist = np.sqrt(self.relative_x**2 + self.relative_y**2) - self.parking_distance
+        heading = np.arctan2(self.relative_y, self.relative_x)
 
-        # YOUR CODE HERE
-        # Populate error_msg with relative_x, relative_y, sqrt(x^2+y^2)
+        x_d = np.cos(heading)*dist
+        y_d = np.sin(heading)*dist
 
+        error_msg.x_error = x_d
+        error_msg.y_error = y_d
+        error_msg.distance_error = np.linalg.norm([x_d, y_d])
         #################################
         
         self.error_pub.publish(error_msg)
