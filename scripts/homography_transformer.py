@@ -20,10 +20,10 @@ from visual_servoing.msg import ConeLocation, ConeLocationPixel
 
 ######################################################
 ## DUMMY POINTS -- ENTER YOUR MEASUREMENTS HERE
-PTS_IMAGE_PLANE = [[-1, -1],
-                   [-1, -1],
-                   [-1, -1],
-                   [-1, -1]] # dummy points
+PTS_IMAGE_PLANE = [[498, 264],
+                   [400, 228],
+                   [244, 280],
+                   [113, 262]] 
 ######################################################
 
 # PTS_GROUND_PLANE units are in inches
@@ -31,10 +31,10 @@ PTS_IMAGE_PLANE = [[-1, -1],
 
 ######################################################
 ## DUMMY POINTS -- ENTER YOUR MEASUREMENTS HERE
-PTS_GROUND_PLANE = [[-1, -1],
-                    [-1, -1],
-                    [-1, -1],
-                    [-1, -1]] # dummy points
+PTS_GROUND_PLANE = [[21.0, -10.0],
+                    [32.0, -7.5],
+                    [18.5, 7.0],
+                    [22.0, 16.5]] 
 ######################################################
 
 METERS_PER_INCH = 0.0254
@@ -77,6 +77,7 @@ class HomographyTransformer:
         relative_xy_msg.y_pos = y
 
         self.cone_pub.publish(relative_xy_msg)
+        self.draw_marker(x, y, "map")
 
 
     def transformUvToXy(self, u, v):

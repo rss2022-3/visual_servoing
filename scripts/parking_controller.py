@@ -26,7 +26,7 @@ class ParkingController():
         self.parking_distance = .75 # meters; try playing with this number!
         self.relative_x = 0
         self.relative_y = 0
-
+    
         self.pursuit = PurePursuit(0.325)
     
     def v_function(self, v_desired, traj):
