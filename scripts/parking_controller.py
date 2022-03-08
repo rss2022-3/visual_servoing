@@ -23,7 +23,8 @@ class ParkingController():
         self.error_pub = rospy.Publisher("/parking_error",
             ParkingError, queue_size=10)
 
-        self.parking_distance = .75 # meters; try playing with this number!
+        #self.parking_distance = .0 # meters; try playing with this number!
+        self.parking_distance = .45 # meters; try playing with this number!
         self.relative_x = 0
         self.relative_y = 0
     
@@ -61,6 +62,8 @@ class ParkingController():
         ack_msg.drive.speed = speed
         if not theta_dot is None:
             ack_msg.drive.steering_angle_velocity = theta_dot
+        else:
+            ack_msg.drive.steering_angle_velocity = 0.1
         if not acceleration is None:
             ack_msg.drive.acceleration = acceleration
         return ack_msg
@@ -79,14 +82,20 @@ class ParkingController():
 
         #generate trajectory 
         traj_knots = np.array([[0,0],
-                              [x_d, y_d],
                               [x_d, y_d]])
-        t_breaks = np.array([0,2,2.1])
+
+        if abs(dist) >= 1:
+            t_breaks = np.array([0,dist])
+        #elif abs(dist) > 0.1:
+        #    t_breaks = np.array([0,0.5])
+        else:
+            t_breaks = np.array([0,1])
+
 
         trj_d = LinearTrajectory(t_breaks, traj_knots)
-
+        
         steer, speed = self.pursuit.adaptiveControl(trj_d, self.v_function)
-        drive_cmd = self.drive(steer, speed)
+        drive_cmd = self.drive(steer, speed, None, None)
 
         #################################
 
