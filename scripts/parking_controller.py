@@ -24,7 +24,8 @@ class ParkingController():
             ParkingError, queue_size=10)
 
         #self.parking_distance = .0 # meters; try playing with this number!
-        self.parking_distance = .45 # meters; try playing with this number!
+        self.parking_distance = .1 # meters; try playing with this number!
+        #self.parking_distance = .45 # meters; try playing with this number!
         self.relative_x = 0
         self.relative_y = 0
     
@@ -82,7 +83,7 @@ class ParkingController():
 
         #generate trajectory 
         traj_knots = np.array([[0,0],
-                              [x_d, y_d]])
+                            [x_d, y_d]])
 
         if abs(dist) >= 1:
             t_breaks = np.array([0,dist])

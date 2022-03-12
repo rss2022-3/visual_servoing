@@ -11,7 +11,7 @@ from geometry_msgs.msg import Point #geometry_msgs not in CMake file
 from visual_servoing.msg import ConeLocationPixel
 
 # import your color segmentation algorithm; call this function in ros_image_callback!
-from computer_vision.color_segmentation import cd_color_segmentation
+from computer_vision.line_color_segmentation import line_color_segmentation
 
 
 class ConeDetector():
@@ -41,7 +41,7 @@ class ConeDetector():
         
         image_msg = np.asarray(image_msg)
 
-        bounding_box = cd_color_segmentation(image_msg)
+        bounding_box = line_color_segmentation(image_msg)
         if not bounding_box is None:
             u = (bounding_box[0][0] + bounding_box[1][0])/2
             v = bounding_box[1][1]
